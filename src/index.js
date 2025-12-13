@@ -1,5 +1,36 @@
+// Bearer token for authentication
+const BEARER_TOKEN = 'HhkNhaAu4fAKysAFJ0nHed6TX9qEwKlKk/nqlcyE0c4=';
+
 export default {
   async fetch(request, env, ctx) {
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+        }
+      });
+    }
+
+    // Check bearer token authentication
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return new Response('Unauthorized: Missing or invalid Authorization header', {
+        status: 401,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    if (token !== BEARER_TOKEN) {
+      return new Response('Unauthorized: Invalid token', {
+        status: 401,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+
     // Get the target URL from the query parameter or path
     const url = new URL(request.url);
 
