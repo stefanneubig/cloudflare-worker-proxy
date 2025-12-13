@@ -1,0 +1,6 @@
+name = "us-proxy"
+main = "src/index.js"
+compatibility_date = "2025-12-12"
+
+[placement]
+mode = "smart"
