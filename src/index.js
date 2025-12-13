@@ -9,7 +9,7 @@ export default {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+          'Access-Control-Allow-Headers': 'Authorization, Content-Type, X-Target-Authorization',
         }
       });
     }
@@ -48,25 +48,29 @@ export default {
       // Parse and validate the target URL
       const target = new URL(targetUrl);
 
-      // Create a new request with the same method, headers, and body
-      const proxyRequest = new Request(target.href, {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-        redirect: 'follow'
-      });
+      // Get the target authorization header if provided
+      const targetAuth = request.headers.get('X-Target-Authorization');
 
-      // Remove cloudflare-specific headers
-      const headers = new Headers(proxyRequest.headers);
+      // Create headers for the outbound request
+      const headers = new Headers(request.headers);
+
+      // Remove proxy-specific and cloudflare-specific headers
+      headers.delete('Authorization'); // Remove proxy token
+      headers.delete('X-Target-Authorization'); // Remove this custom header
       headers.delete('cf-connecting-ip');
       headers.delete('cf-ray');
       headers.delete('cf-visitor');
 
+      // If target authorization was provided, set it as the Authorization header
+      if (targetAuth) {
+        headers.set('Authorization', targetAuth);
+      }
+
       // Forward the request
       const response = await fetch(target.href, {
-        method: proxyRequest.method,
+        method: request.method,
         headers: headers,
-        body: proxyRequest.body,
+        body: request.body,
         redirect: 'follow'
       });
 
