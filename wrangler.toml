@@ -4,3 +4,4 @@ compatibility_date = "2025-12-12"
 
 [placement]
 mode = "smart"
+hints = ["wnam", "enam"]  # Force US routing (Western + Eastern North America)
