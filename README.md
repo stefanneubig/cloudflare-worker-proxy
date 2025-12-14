@@ -1,6 +1,15 @@
 # Cloudflare Worker Proxy
 
-A simple, secure HTTP proxy running on Cloudflare Workers that routes traffic through US data centers. Perfect for accessing geo-restricted APIs or services that require US IP addresses.
+> **⚠️ MIGRATED TO HETZNER VPS**
+>
+> This repo originally used Cloudflare Workers but has migrated to Hetzner VPS for guaranteed US IP routing.
+> Cloudflare Workers cannot control egress IP location - traffic exits from the nearest datacenter.
+>
+> **Current implementation:** See [HETZNER_SETUP.md](HETZNER_SETUP.md)
+> **New endpoint:** `https://proxy-us.sgl.as`
+> **Status:** Cloudflare Worker deprecated (returns HTTP 410)
+
+A simple, secure HTTP proxy that routes traffic through US data centers. Perfect for accessing geo-restricted APIs or services that require US IP addresses.
 
 ## Features
 
